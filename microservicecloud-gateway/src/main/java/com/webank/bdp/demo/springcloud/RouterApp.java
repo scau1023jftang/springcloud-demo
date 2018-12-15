@@ -30,6 +30,6 @@ public class RouterApp {
         return builder.routes().route(p -> p
                 .path("/api/upload")
                 .filters(f -> f.addRequestHeader("bdp-tickid-id","123456"))
-                .uri("http://192.168.40.102:8001")).build();
+                .uri("http://localhost:8001")).build();
     }
 }
