@@ -31,7 +31,7 @@ public class UploadTest {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public String uploda(@FormDataParam("file") InputStream fis,
                          @FormDataParam("file") FormDataContentDisposition fileDisposition, @Context HttpHeaders head) throws IOException {
-        FileOutputStream fileOutputStream = new FileOutputStream("/appcom/tmp/hadoop/"+fileDisposition.getFileName());
+        FileOutputStream fileOutputStream = new FileOutputStream("/opt/tmp/"+fileDisposition.getFileName());
         IOUtils.copy(fis,fileOutputStream);
         IOUtils.closeQuietly(fileOutputStream);
         IOUtils.closeQuietly(fis);
