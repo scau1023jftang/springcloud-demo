@@ -2,15 +2,19 @@ package com.webank.bdp.demo.springcloud;
 
 import io.netty.buffer.ByteBufAllocator;
 import org.apache.commons.io.IOUtils;
+import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.factory.rewrite.HttpMessageWriterResponse;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.NettyDataBufferFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.AbstractServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
@@ -52,7 +56,7 @@ public class GateWayAuthorizationFilter implements GlobalFilter {
             }
         };
         return chain.filter(exchange.mutate().request(decorator).build());*/
-        ServerHttpRequest serverHttpRequest = exchange.getRequest();
+       /* ServerHttpRequest serverHttpRequest = exchange.getRequest();
         String method = serverHttpRequest.getMethodValue();
         if ("POST".equals(method)) {
             //从请求里获取Post请求体
@@ -79,7 +83,16 @@ public class GateWayAuthorizationFilter implements GlobalFilter {
 
             return chain.filter(exchange);
         }
-        return chain.filter(exchange);
+        return chain.filter(exchange);*/
+        //MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
+        ServerHttpRequestDecorator decorator = new ServerHttpRequestDecorator(exchange.getRequest()) {
+            public Flux<DataBuffer> getBody() {
+                return exchange.getRequest().getBody();
+            }
+        };
+        return chain.filter(exchange.mutate().request(decorator).build());
+/*        MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
+        return chain.filter(exchange);*/
     }
 
 
